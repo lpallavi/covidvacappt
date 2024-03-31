@@ -1,0 +1,316 @@
+OVERVIEW
+1. Project Background and Description
+ The COVID-19 Vaccination Appointment System Prototype will allow residents(users) of a country to sign-up and register to the system with their unique Identification number and unique username and browse and make/edit vaccination appointments. Administrators will be able to access user records and appointment dates and will be able to make changes to them as needed. 
+
+2. Project Scope
+ The application has two main modes of access: Registration and Login (User or Admin).
+
+Only a user with unique identification number will be allowed to register to the system. The user will then need to register with a unique username and password. To ensure security, all passwords will be encrypted before storing in the database.
+Users who have successfully registered can view/change their vaccination appointments. Vaccinations appointments for first and second vaccine are available only for citizens aged 70 years and above. Users who are less than 70 years of age will not be able to make any vaccination appointments till further changes in age criteria are made, or until further communication from MOH.
+The second vaccination needs to be 21-28 days after the first vaccination. Users who have missed their appointments for first and/or second vaccinations can make new appointments within the system. But the second vaccination appointment date will have to be within the 21-28 days after the first vaccination date and also subject to availability of appointment date and time. 
+For users who have already taken their first vaccination more than 28 days earlier will not be able to make a second appointment and will need to call MOH for assistance for further advice. 
+Admin members can login to the system to view and delete registered users. They can also view the appointment dates (and times) currently present in the system; and add appointment dates as available. Appointment times range from 9:00 am up to 6:00 pm at an interval of every 15 min. That means first appointment is at 9:00 am, followed by 9:15 am, and so on. Last appointment time is at 5:45 pm and will end at 6:00 pm. 
+
+3. Application Setup Requirements and Deliverables
+
+System Requirements: Microsoft Windows OS PC/ Command prompt console
+
+Procedure to execute the application in a Windows environment:
+1. Copy the application to a folder in PC’s Golang path 
+2. To execute : 
+go run .\source\
+3. Go source code files:
+main.go – file containing main function, const declarations and main function calls
+person.go – file containing person data stored as a struct, and all functions that manipulate it
+personLinkedList.go – file containing linked list data structure for storing data for each person and all functions that manipulate it
+binaryTree.go – file containing Binary Search Tree data structure used for quick search for user identification and username information, and all functions that operate on it
+fileHandler.go – file containing read and write functions for CSV files for accessing/storing user data and appointment data
+identityHandler.go – file containing functions used for user registration, user/admin login and logout 
+userHandler.go – file containing functions used for operations after user login
+adminHandler.go – file containing functions used for operations after admin login
+sharedFunctions.go – file containing common functions shared across the application, such as type conversion, calculating age, creating data for templates, formatting output and manipulating time array.
+4. Csv files for easy storage and retrieval:
+personData.csv – file containing data for each person/user after successful registration.
+freeappointments.csv – file containing list of all available appointments, with date and 15 min interval time
+5. Templates:
+header.gohtml, spacers.gohtml, mainmenu.gohtml – Header, Spaces and main menu templates
+index.gohtml – Home page
+register.gohtml, registerform.gohtml – Registration form
+login.gohtml – Login page
+admin.gohtml, adminloginmenu.gohtml – Admin page for all admin options
+userloginmenu – Menu after user logs in
+viewappt.gohtml, makeappt.gohtml, deleteappt.gohtml – View, make and delete appointments for user
+profile.gohtml – Page for displaying user profile
+6. Assets:
+bg.jpg – Background image
+styles.css  - Basic CSS styling
+
+
+4.	Application Menu : At a Glance
+ 	 COVID-19 Vaccination Appointment System  
+
+Client	Server
+Login Menu
+•	New registration
+•	User Login
+•	Admin Login	Login 
+•	Issue Cookie with UUID
+•	Store session – Username 
+•	Get Cookie
+•	Get user information using current cookie UUID and session information
+User Page 
+•	View appointments
+•	Make new appointments
+•	Delete appointments
+•	View Profile
+•	Logout	User Data
+•	Update/sort/insert appointments in the appointments array
+•	Update profile of user
+•	Store updated data in csv files at logout
+Admin Page 
+•	List all users
+•	Delete a user
+•	View appointments by date
+•	Add appointments for a date
+•	Logout	Admin Data
+•	Delete user information from all data structures (linked list and BST)
+•	Update/sort/insert new appointments in the appointments array
+•	Store all updated data in csv files at logout
+
+
+ 
+5.	Description of Client/Server System
+ 	Server and Client system using a localhost at port 5221
+
+	Client-Server System:
+The Client-Server system can be divided into two logical parts, viz the client that requests for services, and a server that provides services. The main features of this system are:
+•	It can be run on separate machines on a network.
+•	It allows different users to access powerful resources on the server from lower end computers.
+•	The server holds data while the client is responsible for the user interface.
+•	The application logic can be distributed between the client and the server.
+•	The system can be three-tiered, with the middle tier holding most of the application logic.
+	Main Features covered in Go In Action I:
+a.	The net/http package : Handler, ListenAndServe, Request, ResponseWriter
+The two main parts of net/http package are type Handler and method ListenAndServe.
+A Handler responds to an HTTP request. It takes in a request (*Request) and writes reply headers and data to the ResponseWriter. It is defined as 
+type Handler interface { ServeHTTP(ResponseWriter, *Request) }
+ListenAndServe is a method attached to type Handler. Hence it is invoked when a Handler interface is used. It is defined as func ListenAndServe(addr string, handler Handler) error
+ListenAndServe takes an address(the port to listen to) and a value of type Handler. Therefore, when ListenAndServe is passed a value of type Handler, all the methods attached to type Handler can be used.
+b.	Templates: For serving Client-Side files
+Templates are used to customize data to be present to client interface. They can be used to create personalized webpages. Templates are used with the following two steps:
+i.	Parsing the template – This can be done by using ParseFiles(specific array of files) or ParseGlob(entire folder). This should be done during initialization only, and not every time a template is requested by client.
+ii.	Executing the template – Data can be passed to the template in this stage. Templates can take only one variable, but the variable can be of a composite type. The composite data structure can contain map, slice/array, struct, struct of slice, struct of slice of struct, and even functions. Certain global functions such as eq, gt, lt etc can be used inside template as well. All form data, containing user generated information, is read back by the server using post method and request.FormValue(). Get method uses URL to pass data.
+c.	Cookies and Sessions: For remembering the current user
+Cookies are using to maintain state of the current user. A unique ID is generated using UUID and stored in a cookie. UUID generated is so unique that “only after generating 1 billion UUIDs every second for approximately 100 years would the probability of creating a single duplicate reach 50%”. 
+When a client makes a request to a server at a particular domain, if a cookie has been stored on the client’s computer, then it will be included in the request by the browser. The cookie will then be read by the server and the unique ID will be extracted. The UUID will be used to identity the current user who is making the request. 
+Main features of cookies are: 
+•	Cookies are domain specific; every domain will create a cookie for itself that will be stored on the client’s computer.
+•	Cookies are used to record user activity or to contain state data of user such as User ID, Cart contents, linked clicked etc.
+•	Cookies are encrypted during transport from server to client.
+This process of using cookies and storing user data on server is called a session. It is how webpages can ‘know’ information about a user, even after they close the browser. Cookies help the server remember.
+	Error handling and Concurrency mechanism incorporated :
+ 	 Error handling mechanism 
+
+User inputs from are restricted to a certain level inside the form using html “required” fields and type for specifying the type of input needed. Any errors in login or incorrect user inputs are handled by generating an appropriate message using http.Error. All other errors generated within the system create an error message that will be flagged using fmt.Println.
+ 	 Tolerance to potential panics 
+
+As the code handles most of the errors and flags errors during the execution such as for type conversions and time.Time processing, the only panic scenarios arise while reading the .csv files. If the .csv files are corrupted, or cannot be opened, then there is no way that the application can proceed and is a cause for panic. Panic is handled in this case, and a recover function is deferred at the end of the function call in main. Panic results in terminating the program.
+ 	 Concurrency using mutex 
+
+The functions that take most amount of CPU time are functions operating on the linked list and BST data structures. That is why these three functions are executed concurrently, drastically reducing processing time when multiple CPUs are available. Since the functions access critical data structures, these data structures are locked using mutex, so that no other function can access and modify them while the goroutines are in progress. Mutex is added to linked data structure, and each BST data structure for individually locking each structure.
+Here are the scenarios when the data structures are accessed concurrently :
+1.	During the start of the application, when the personData.csv file is being read
+	The profile information of each registered user is read from csv file and added one by one to the linked list
+	The usernames obtained from the csv file is also added into the BST data structure for usernames
+	The identification numbers obtained from the csv file is also added into the BST data structure for identification numbers
+2.	During the registration process, when user provides unique username, identification and other required data for registration process
+	The profile information of the user to be registered is added to the end of the linked list
+	The username of the user to be registered in inserted in the username BST data structure
+	The identification of the user to be registered in inserted in the identification BST data structure
+3.	During the user deletion process by admin
+	The username of the user to be deleted in removed from the username BST data structure
+	The identification of the user to be deleted in removed from the identification BST data structure
+4.	During admin or user logout
+	The updated profile information of all users is stored back into the person csv file.
+	The updated appointment information is stored back into the appointment csv file.
+
+User/Admin Login information for testing : 
+Username	Password	Condition
+MJ2020	123456	First vaccine done, second vaccine missed date, 28 days elapsed after first vaccination
+j123c	abcdefg	Both vaccinations done, complete
+ladygaga	password	Not yet 70 years, does not qualify for vaccination
+harrypotter	123456	First vaccination done on 2021-03-01, second vaccination not yet done.
+pikachu	pikapika	No appointments taken
+admin	goisthebest	For logging into admin account
+
+ 
+ 	 The following pages are adapted from the Go Advanced Assignment document. This is not part of the assignment requirements, but are included/updated in order to maintain continuity with advanced assignment and provide additional information if reader needs further details.
+
+6.	Features and Functions – Main Menu 
+ 	 COVID-19 Vaccination Appointment System - Main Menu: 
+
+The COVID-19 Vaccination Appointment System Main Menu offers two main choices: Registration and Login
+1.	User Registration : 
+Registration option allows any user with a unique identification number to register to the system. If the identification number of the user is already present in the system, the user cannot register again. Every user also needs a unique username, which is checked within the system before registration can proceed.
+Fields for Registration are:
+1.	Identification (NRIC/FIN/Passport number) – Required, must be unique, first character must be an alphabet 
+2.	Username – Required, must be unique, first letter must be an alphabet. 
+3.	Password – Required, is encrypted before storing.
+4.	First Name – Required, first letter must be an alphabet.
+5.	Last Name – Required, first letter must be an alphabet.
+6.	Phone number – Required and must be all digits.
+7.	Date of birth – Required and must be in YYYY-MM-DD format
+8.	Email address – Optional, user can press enter to skip this field, should be one single string without spaces, first letter must be an alphabet.
+9.	Address – Optional, user can press enter to skip this field. Address can be composed of multiple strings/words, followed by enter.
+2.	User Login : 
+Once registration is successful, user can login into the system with the unique username and password. After successful login, the user login menu will be displayed for the user to view/edit appointments and view profile information. The COVID-19 Vaccination Appointment System post login Menu offers a different set of choices for User and Admin Login.
+3.	Admin Login : 
+Admin can login with the admin name: “admin”. Password for admin login is “goisthebest”. This is hardcoded in the system. After successful login, the admin login menu will be displayed for the admin to view/delete users and view/add appointments. The COVID-19 Vaccination Appointment System Post Login Menu offers a different set of choices for User and Admin Login. Admin login can be done using the same Login page as User Login.
+4.	Logout : 
+This will logout the user or admin and all changes made to user and appointments will be stored in the two csv files.
+
+ 
+7.	Features and Functions – Post Login Menu – User 
+ 	 COVID-19 Vaccination Appointment System – Post Login Menu: User Login
+
+The COVID-19 Vaccination Appointment System Post Login Menu offers a different set of choices for User and Admin Login 
+User Login : 
+After the user successfully completes log in, user records are accessed by the system. The user can then view the vaccinations appointments if any, make/delete appointments and view the profile information. Upon logout, updated user information is stored back into the CSV file.
+ 	 Option 1: View appointments 
+
+User can view appointments and make/delete appointments only when he/she meets the age requirements. Currently only users aged 70 years and above are qualified to receive vaccination. Hence, users who do not meet this criterion will not be allowed to access the view/make/delete appointments menu. All users will be allowed to view their profile information, and logout.
+ 	 Option 2: Make new appointments
+
+If user chooses to make new appointments, a list of available dates and times are displayed. The list of available dates and time is read during initialization from the freeappointments.csv file. Currently only 15 dates are displayed at a time, all of which are after today’s date/time (the date/time the application is being run). That means, any appointments before today’s date/time (i.e. the date/time the application is run) are not displayed. Hence appointments are always made for a future date/time. 
+If first appointment has not been made, a list of available dates/times for first appointment will be displayed – upto 15 only. The user can then choose the radio option for the date/time to book first appointment. All changes made with this option will be saved to freeappointments.csv upon logout. After choosing the radio option, the user can click the confirm button to fix the appointment. If the user clicks on cancel button, no changes will be made.	
+The user can then make new appointment for second vaccination. In addition to being a date/time after today’s date/time, the second vaccination date/time also needs to be 21-28 days after the first vaccination date. Hence the first vaccination appointment must be done first, and the second vaccination date/time is chosen such that it meets the 21-28 days criterion. If there are no appointments dates/times available which meet this criterion, user can delete first appointment, and make appointments at a later date. 
+If the user misses his/her second vaccination appointment, he/she can still make a new appointment for second vaccination provided they are available in list of free appointments and are 21-28 days after the date the first vaccination has been administered. Since it is unclear whether vaccinations are effective if the two doses are more than 21-28 days apart, any user who is unable to secure a second vaccination appointment after being given the first vaccination must contact MOH immediately for further advice and instructions.
+
+
+ 	 Option 3: Delete appointments
+
+Depending on whether the user has made first appointment or both appointments, or has missed first or second or both appointments, the user will be given a chance to delete appointments before making new appointments. The user profile is checked, and suggestions are made depending on the date/time of appointments and whether vaccination has been done or is still pending for these dates. If user has successfully taken both first and second doses of the vaccination, then he/she will not be able to delete any appointments, and no further action will be required. All changes made with this option will be saved to freeappointments.csv upon logout.
+Alternatively, user can delete first appointment, before making second appointment, in case no second vaccination date is available, or user decides to choose another date for vaccination.
+If user has missed his/her first appointment date, although second appointment date is in the future, user must delete both appointments first before making fresh first and second appointments.
+If user has taken his/her first vaccination dose, but missed the second appointment date, user can still delete second vaccination appointment, and make new one if first vaccination date has not been taken more than 28 days before today’s date/time (i.e. the date/time the application is executed). 
+Due to some unforeseen reasons, if the user misses his/her second vaccination appointment, after taking first vaccination, and is unable to reschedule a new second appointment in time, the system will not be able to make a new appointment for him/her if 28 days have already elapsed after the first vaccine administration. The user is instructed to contact MOH immediately.
+ 	 Option 4: View Your Profile Information
+
+All users can view their profile information with this option. 
+The following items of the user profile are displayed:
+1.	First name
+2.	Last name
+3.	Username – unique
+4.	Identification – Unique 
+5.	Date of Birth – YYYY-MM-DD format
+6.	Phone 
+7.	Email
+8.	Address
+9.	Vaccination Qualification – Calculated as per date of birth, only users above 70 years old qualify as of now 
+ 	 Option 5: Logout
+
+User can logout after he/she finishes using the system. All his profile data will be stored in personData.csv to be retrieved again after successful login. Any changes in appointments are also stored to freeappointments.csv
+  
+8.	Features and Functions – Post Login Menu - Admin
+ 	 COVID-19 Vaccination Appointment System – Post Login Menu: Admin Login
+
+Admin Login : 
+After admin successfully completes log in, he/she can make administrative changes to the system. 
+ 	 Option 1: List all users 
+
+Admin can view the list of all users that have successfully registered to the system. 
+ 	 Option 2: Delete a user
+
+Admin can delete a particular user by choosing the radio button in front of the user to be deleted. The admin will then click on submit button to initiate deletion of user details. The user information will be deleted from the linked list array as well as from both Binary Search Trees.
+ 	 Option 3: View available appointments by date
+
+Admin can view all the dates for which appointments are present in the system. The times for each appointment are displayed horizontally in front of each date for brevity. Currently all the dates which have atleast one free slot available are displayed. Only the appointment dates which are after today’s date/time (when the application is being executed) are displayed. 
+ 	 Option 4: Add available appointments for a date
+
+The admin can add appointment time slots for specific dates to the system. Each slot is for a duration of 15 minutes for each appointment. The admin can add appointment times in one shot for a particular date, starting from 9am upto 6 pm, with 15 min for each appointment. That means first appointment will be at 09:00:00, second appointment will be at 09:15:00 and so on, with last appointment being at 17:45:00. Appointments are added in chronological order and added in correct position as per value. So all the appointments are always sorted in the appointment array.
+ 	 Option 5: Logout
+
+Admin can logout after he/she finishes using the system. All changes made such as deleted usernames, and updated appointments will be stored in personData.csv, and freeappointments.csv.
+
+
+
+Data Structures – Linked List, Binary Search Tree, Array Slice
+
+Linked List :
+The primary data structure for storing the data for each user is a linked list. The linked list can store any number of users, in any sequence, and with each user information stored together in a struct. For this application a single linked list is used, instead of any other data structure for the following reasons :
+•	The size of the linked list can grow according to the need of the application, and hence will not waste storage as the demand for vaccination registration increases.
+•	The linked list will be created with user data from the personData.csv when application starts. This is done concurrently using Go routines, along with updating the BST data structures for username and identification. This ensures that if multiple CPUs are available, the time taken to create these data structures is reduced and efficiently done.
+•	The linked list will be traversed only while accessing the user records after successful login, and while storing the user data back into the personData.csv. These are not time critical operations, and although login/logout time might be adversely affected with increase in number of users, the appointment system function remain unaffected and the storage benefits are immensely huge.
+•	The users can also be deleted by the admin, which is a simple operation with a linked list involving updating of pointers, with no need to shift items or requiring any additional processing. The updated linked list will then be stored into the personData.csv at the time of logout. Because the BST data structures for username and identification are only required at the time of registration, these data structures don’t need to be updated as of now when user is deleted.
+•	Using arrays, maps, stacks, queues or BST to store user data doesn’t provide any additional benefits, and in fact can be detrimental to making the application sturdy, time-effective, and will involve more memory and will be costly for processing. Hence linked list is the best option for this type of data.
+Binary Search Tree :
+The secondary data structure used for storing the username and identification number is a Binary Search Tree. This data structure is used during the registration phase and provide immense savings in time. The reasons for using a binary search tree are :
+•	As the COVID-19 vaccination system is critical to maintaining the health and well-being of the country, by administering correct and timely dosage to residents, and avoiding any mistakes of double or missed dosage, the identification number must be unique for registering to the system. 
+•	This requires a quick search among the user database, to ensure every citizen registers only once with their unique identification number. The username is used to access the system, hence, it also needs to be unique.
+•	The Binary Search Tree can quickly search through a list of identification numbers and usernames, without having the need to access the linked list over and over again.
+•	Two BST data structures are used, one for identification number, and other for username.
+•	The two BST structures are created from the personData.csv when application starts. They are created concurrently along with the creation of the linked list for storing person data. This ensure the application can start and become operational fast. The BST is already sorted at the time of creation from personData.csv.
+•	During registration, the identification number is first searched in the BST for identification, and if not found, then only registration can proceed. The username is then searched in the BST for username, and if not found, then only the rest of the registration can proceed.
+•	Adding a new username or identification to the BST is done after successful registration, so that more than one registration can be done at once with the main menu. 
+Array Slice for time.Time :
+All appointments are made with a date in YYYY-MM-DD format and exact time in hh:mm:ss format. All available appointments with specific date and time is read from the freeappointments.csv file. First column contains the date and second column contains the time. The data and time are combined to form a single time,Time type variable. This is then appended to an array slice of time.Time. Reasons for using an array slice are:
+•	An array slice is used to store the appointments, as the array need to be changed during the execution of the program. 
+•	For user login: 
+o	The user can make new appointments for first and second vaccination. These entries will then be added to the user’s profile and deleted from the appointment array slice.
+o	If user deletes previously made appointments, these entries will be added back into the appointment array slice to be used by any other user/same user if the date is after today’s date/time.
+o	After user logs out of the system, the freeappointments.csv file will be updated, with only free appointments available after today’s date stored back as date-column 1 and time-column 2
+•	For admin login: 
+o	The admin can add more dates to the array slice. This can be done very easily by updating the array slice, and appending dates with time ranging from 09:00 hrs to 17:45 hrs which is from 9 am upto 5:45 pm with each appointment being for 15 min.
+o	This will then be written back into the freeappointments.csv file when admin logs out.
+•	An array slice is chosen as it can expand as per dates added. Deleting a single date/time from an array is not so intensive in terms of computing time. Also it allows for faster access to appointment dates, faster search, faster update, and faster execution of program after login has been done.
+	
+Algorithms – Search, Sort and Recursive
+
+Search Algorithm with Linked List : 
+The linked list data structure stores all the data pertaining to each user, such as first and last name, username and password, identification number, date of birth for deciding if user meets age criteria, phone number for easy contact, and optional email id and address. It also stores the vaccination information, qualification, date and time and if vaccination has been done or not for both first and second doses. Creating a linked list containing all user’s data is done concurrently to save time by making use of multiple CPUs. Nodes are added 
+On login, the linked list needs to be searched to access all user information. This requires a search algorithm, that traverses the linked list one node at a time. Worst case complexity of this algorithm is O(n), for searching a user that might be present at the very end of the linked list. 
+Search algorithm is also required while deleting the user profile, as done with admin login. The worst case complexity is still O(n), when the user to be deleted is at the end of the linked list.
+The linked list is not sorted, hence no sort algorithm is used.
+Search Algorithm with BST :
+The BST data structure needs to be searched during the registration process. Searching through a Binary Search Tree is a simple task, as the BST is already sorted at the time of creation, with items from the personData.csv, or when a new username or identification number is added. Searching is done by comparing if each root node is smaller, bigger or equal to the username/identification string. If root bigger, then the search continues on the left of the tree. If the root is smaller, the search continues on the right of the tree. If root is equal to the string being compared then the search is over and the string is found. If string is not found after reaching the end of the tree, then the username or identification number is unique, and registration can continue. Search algorithm for a BST needs a recursive algorithm, as the BST tree is not balanced, and traversal iterations to reach the leaf nodes can vary depending on each item to be searched.
+Sort Algorithm with BST :
+The BST data structure is sorted at the time of creation, with items from the personData.csv, or when a new username or identification number is added. Inserting an item into the BST is done concurrently to save time by making use of multiple CPUs. If an item to be added is less than the root node, then the item must be added to the left of the root node. If an item to be added is more than the root node, then the item must be added to the right of the root node. Items can never be the same as root node, as all usernames and identification numbers are unique. Sorting is done during insertion itself and needs a recursive algorithm, as the BST tree is not balanced, and traversal iterations can vary depending on each item to be inserted.
+ 	 Additional feature – Encryption of all passwords 
+
+Encryption:
+For providing higher security for protecting personal information, no passwords are stored in the linked list or in the csv file. All passwords are encrypted with "golang.org/x/crypto/bcrypt" package, which offers two functions for login purposes.
+1.	bcrypt.GenerateFromPassword – This encrypts the password into bytes, which can then be stored as a string
+2.	bcrypt.CompareHashAndPassword – This compares the encrypted password stored with the database, with the password given by user or admin during login process. If passwords match, then login will be successful.
+
+ 	 Significant Constants – defined in main function
+
+Constants:
+Constants help to make the code more readable and resuable. The following constants are declared in the main.go file, and can be changed as per changes in application requirements.
+1.	ageQualification = 70 
+	Currently age criteria for vaccination is 70 years and above.
+2.	numofApptsShown = 15
+	Currently only 15 unique appointment dates/time are shown to user for making new appointments for readability purposes
+3.	adminName = “admin” 
+	Admin name is hardcoded to be admin
+	Admin password is encrypted, so adminPW shows the encrypted string.
+	Good luck figuring out the password after encryption. Okay, its “goisthebest”
+4.	filePath = “./”
+	This is used to read the csv files, so changing it will result in panic
+5.	csvPath = “/csv”
+	This is the directory structure under filePath, where csv files are stored. Changing this will result in panic.
+	Currently csv files are overwritten after every update. Backups and file management is required if past data needs to be stored.
+6.	htmlPath = “/html”
+	This is the directory structure under filePath, where go html templates are stored. Changing this will result in panic.
+7.	apptFileName = “freeappointments.csv”
+	This is the CSV file that stores all free appointment dates and time.
+	Column 1 : Date in YYYY-MM-DD format
+	Column 2 : Time in hh:mm:ss format
+8.	personDataFileName = “personData.csv”
+	This is the csv file that stores each persons data. Data is stored in the same order as the struct for each person in linked list data structure.
+ 	 Final conclusion
+
+The COVID-19 pandemic, also known as the coronavirus pandemic, is an ongoing pandemic of coronavirus disease 2019 (COVID-19). The responses to the pandemic have resulted in global social and economic disruption, including the largest global recession since the Great Depression. COVID-19 pandemic response remains till date a war against an unknown and invisible virus. 
+Many countries have implemented phased distribution plans for vaccines that prioritize those at highest risk of complications, such as the elderly and those at high risk of exposure and transmission, such as healthcare workers.
+With systems such as COVID-19 Vaccination Appointment System, the most basic requirements for administering vaccines can be addressed. Registration, login and appointments can be done easily and can be deployed for large scale usage with additional appointment/information features added as required. 
+Only with larger international cooperation, reduced human footprints, increased personal hygiene and safe distancing measures can we hope to defeat this global pandemic.
+

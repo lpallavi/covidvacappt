@@ -1,0 +1,29 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+{{if .Firstname}}
+    <h3>Hello {{.Firstname}} {{.Lastname}}</h3>
+{{end}}
+{{range $index, $element := .Message}}
+    {{if eq $index 0}}
+        <h3>{{$element}}</h3>
+    {{else}}    
+        <div>{{$element}}</div>
+    {{end}}
+{{end}}
+<br>
+{{if .Apptdelete}}
+    <form method="post" enctype="multipart/form-data" style="display:inline-block;">        
+        <input type="submit" value="Confirm">
+    </form>
+
+    <form method="post" action="/" enctype="multipart/form-data" style="display:inline-block;">        
+        <input type="submit" value="Cancel">
+    </form>
+
+{{end}}
+
+{{template "userloginmenu"}}
+<br>
+</body>
+</html>

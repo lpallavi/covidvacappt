@@ -1,0 +1,16 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+
+<h1>Please login to your account</h1>
+{{if .}} 
+    <div id="warning">{{.}}</div>
+{{end}}
+<form method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="text" autocomplete="off" name="username" placeholder="username"><br><br>
+    <input type="password" autocomplete="off" name="password" placeholder="password"><br><br>
+    <input type="submit" value="Login"><br>
+</form>
+<h2>Or <a href="/register">Register Now</a> if you do not have an account</h2>
+</body>
+</html>

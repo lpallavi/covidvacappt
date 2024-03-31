@@ -1,0 +1,12 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+<br>
+{{if .Firstname}}
+    <h3>Hello {{.Firstname}} {{.Lastname}}</h3>
+    {{template "userloginmenu"}}
+{{else}} 
+    {{template "mainmenu"}}
+{{end}}
+</body>
+</html>

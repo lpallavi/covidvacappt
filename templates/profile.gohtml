@@ -1,0 +1,23 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+{{if .Firstname}}
+    <h3>Hello {{.Firstname}} {{.Lastname}}</h3>  
+    <h3><u>User details</u></h3>
+    <div>Name: {{.Firstname}} {{.Lastname}} </div>
+    <div>Identification: {{.Identification}}</div>
+    <div>Username: {{.Username}}</div>
+    <div>Date of Birth: {{.Dob}}</div>
+    <div>Phone: {{.Phone}}</div>
+    <div>Address: {{.Address}}</div>
+    <div>Email: {{.Email}}</div>
+    {{if eq .VaccinationQualify true}}
+        <div>You qualify for COVID-19 vaccination.</div>
+    {{else}}
+        <div>You do not qualify for COVID-19 vaccination.</div>
+    {{end}}
+    <br>
+    {{template "userloginmenu"}}
+{{end}}
+</body>
+</html>

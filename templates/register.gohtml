@@ -1,0 +1,85 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+<h2>Please register a new account or <a href="/login">Login</a></h2>
+<form method="POST" enctype="multipart/form-data" autocomplete="off" >
+    {{if .Firstname}}
+        <div id="warning"><span>{{.Firstname}}</span> </div>    
+    {{end}}    
+    <label class="required" for="firstname">First Name: </label>
+    <input type="text" id="firstname" name="firstname" placeholder="Firstname" required>
+    <br>
+    <br>
+    {{if .Lastname}}
+        <div id="warning"><span>{{.Lastname}}</span> </div>    
+    {{end}}    
+    <label class="required" for="lastname">Last Name: </label>
+    <input type="text" id="lastname" name="lastname"  placeholder="Lastname" required>
+    <br>
+    <br>
+    {{if .Identification}}
+        <div id="warning"><span>{{.Identification}}</span> </div>    
+    {{end}}    
+    <label class="required"  for="identification">Identification: </label>
+    <input type="text" autocomplete="off" id="identification" name="identification" placeholder="NRIC/Passport" required>
+    <br>
+    <br>
+    {{if .Username}}
+        <div id="warning"><span>{{.Username}}</span> </div>    
+    {{end}}    
+    <label class="required" for="username">Username: </label>
+    <input type="text" autocomplete="off" id="username" name="username" placeholder="username" required>
+    <br>
+    <br>
+    {{if .Password}}
+        <div id="warning"><span>{{.Password}}</span> </div>    
+    {{end}}    
+    <label class="required" for="password">Password: </label>
+    <input type="password" autocomplete="off" id="password" name="password" placeholder="password" min="5" max="16" required>
+    <br>
+    <br>
+    {{if .Dob}}
+        <div id="warning"><span>{{.Dob}}</span> </div>    
+    {{end}}    
+    <label class="required" for="dob">Date Of Birth: </label>
+    <input type="date" id="dob" name="dob" placeholder="Date Of Birth" required>
+    <br>
+    <br>
+    {{if .Phone}}
+        <div id="warning"><span>{{.Phone}}</span> </div>    
+    {{end}}    
+    <label class="required" for="phone">Phone: +65-</label>
+    <input type="tel" id="phone" name="phone" placeholder="8-digit phone number" pattern="[1-9]{1}[0-9]{7}" required>
+    <br>
+    <br>
+    {{if .Email}}
+        <div id="warning"><span>{{.Email}}</span> </div>    
+    {{end}}    
+    <label for="email">Email: </label>
+    <input type="email" id="email" name="email" placeholder="Optional:email" >
+    <br>
+    <br>
+    {{if .Address}}
+        <div id="warning"><span>{{.Address}}</span> </div>    
+    {{end}}    
+    <label for="address">Address: </label>
+    <input type="text" id="address" name="address" placeholder="Optional:address">
+    <br>
+    <br>
+    <input type="submit">
+    <input type="reset">
+</form>
+<p>
+   Firstname      string
+	Lastname       string
+
+	Username       string
+	Password       string
+	Dob            string
+	Phone          string
+	Address        string
+	Email          string
+    </p>
+
+</body>
+</html>

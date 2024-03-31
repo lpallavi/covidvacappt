@@ -1,0 +1,58 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+<br>
+<h3>Welcome ADMIN</h3>
+
+{{if .Message}}
+    {{range $index, $element := .Message}}
+        {{if eq $index 0}}
+            <h3>{{$element}}</h3>
+        {{else}}    
+            <div>{{$element}}</div>
+        {{end}}
+    {{end}}
+{{end}}
+
+{{if .ApptAdd}}
+    {{if eq .ApptAdd "no"}}  
+        <ul style="list-style-type:decimal">
+            {{range $index, $element := .Users}}
+                <li>{{$element}}</li>
+                <br>
+            {{end}}
+        </ul>
+    {{else if eq .ApptAdd "yes"}}       
+        <form method="post" enctype="multipart/form-data">
+            <label for="appt">Add Appointments for : </label>
+            <input type="date" id="appt" name="appt" >
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    {{end}}
+{{end}}
+
+{{if .Deleteuser}}
+    {{if eq .Deleteuser "no"}}       
+        <ul style="list-style-type:decimal">
+            {{range $index, $element := .Users}}
+                <li>{{$element}}</li>
+            {{end}}
+        </ul>
+    {{else if eq .Deleteuser "yes"}}       
+        <form method="post" enctype="multipart/form-data">
+            {{range $index, $element := .Users}}
+                <input type="radio" name="user" value={{$index}}>
+                <label>{{$element}}</label><br> 
+            {{end}}
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    {{end}}
+{{end}}
+
+{{template "adminloginmenu"}}
+
+<br>
+</body>
+</html>

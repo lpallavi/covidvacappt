@@ -1,0 +1,16 @@
+{{template "header"}}
+<body>
+{{template "spacers"}}
+<br>
+{{range $index, $element := .}}
+    {{if eq $index 0}}
+        <h3>{{$element}}</h3>
+    {{else}}    
+        <div>{{$element}}</div>
+    {{end}}
+{{end}}
+
+{{template "userloginmenu"}}
+<br>
+</body>
+</html>
